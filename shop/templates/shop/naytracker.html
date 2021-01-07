@@ -1,0 +1,101 @@
+{% extends 'shop/basic.html' %}
+{%block title%}Tracker-Page{% endblock %}
+{% block css %}
+h4{
+	text-align:center;
+}
+
+.form-group{
+	
+	width:45%;
+}
+
+
+#submitbtn{
+	
+	width:30%;
+	margin-left:350px;
+}
+{% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+	<h3>Enter your Email & Tracker Id to get the Information about your Product</h3>
+	
+	<form method="post" action="#" id="trackerform"> {% csrf_token %}
+	<div class="row">
+    <div class="form-group mx-2">
+    <label for="email">Email</label>
+    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your Email-Id">
+	</div>
+	<div class="form-group mx-2">
+    <label for="orderid">Tracking-Id</label>
+    <input type="text" class="form-control" id="orderid" name="orderid" placeholder="Enter your Tracking-Id">
+    </div>
+    
+  </div>
+  <button type="submit" id='submitbtn' class="btn btn-success my-3 py-2">Submit</button>
+</form>
+
+<div class="col my-3">
+        <h3 class='toptext'>Your Order Status!</h3>
+        <span id="fetchingmessage">
+        {% for items in dicts %}
+        <ul class="list-group" id="items">	
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{items.text}}
+                <span class="badge badge-primary badge-pill">{{items.time}}</span>
+            </li>
+        </ul>
+        {% endfor %}
+        </span>
+    </div>
+
+    <div class="col my-3">
+        <h3 class='toptext'>Your Order List!</h3>
+        <span id="fetchingitems">
+        {% for items in fetch %}
+        <ul class="list-group" id="itemsretrive">	
+            <!-- filling up with database -->
+        </ul>
+        {% endfor %}
+        </span>
+    </div>
+
+
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+
+$('#submitbtn').submit(function(){
+    cart = JSON.parse(localStorage.getItem(fetch));
+    tot=0;
+    for (item in cart) {
+        
+        let qty = cart[item][0];
+        let name = cart[item][1];
+        let price=cart[item][2];
+        tot=tot +price*cart[item][0];
+        str = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                ${name}
+                <span class="badge badge-primary badge-pill px-2 py-2">Rs: ${price}  Qty: ${qty}</span>
+            </li>`;
+        $('#fetchingitems').append(str);
+}
+});
+
+
+
+// If there is no data found in the input
+{% if unable %}
+document.getElementById('unableid').innerHTML=("Unable to Fetch your Details!");
+{% endif %}
+ 
+
+{% endblock %}
+</script>

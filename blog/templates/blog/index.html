@@ -1,0 +1,40 @@
+{% extends 'shop/basic.html' %}
+{% block title%} Blog Page {% endblock %}
+
+
+{% block css %}
+#imgs{
+  width:240px;
+  height:230px;
+  margin-top:6px;
+}
+{% endblock %}
+{% block body %}
+
+
+<div class="container mt-2">
+  
+    <div class="row mb-2">
+    {% for items in conts %}
+    <div class="col-md-6 card">
+      <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+          <strong class="d-inline-block mb-2 text-primary">{{items.title}}</strong>
+          <h3 class="mb-0">{{items.head0|slice:":30"}}...</h3>
+          <div class="mb-1 text-muted">Nov 12</div>
+          <p class="card-text mb-auto">{{items.chead0|slice:":35"}}...</p>
+          <a href="/blog/blogpost/{{items.post_id}}/" class="stretched-link">Continue reading</a>
+        </div>
+        <div class="col-auto d-none d-lg-block">
+          
+          <img id="imgs" src="/media/{{items.thumbnail}}"></svg>
+        </div>
+      </div>
+    </div>
+{% if forloop.counter|divisibleby:2 %}
+</div><div class="row mb-2">
+{% endif %}
+{% endfor %}
+</div>
+
+{% endblock %}

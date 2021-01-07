@@ -1,0 +1,106 @@
+{% extends 'shop/basic.html' %}
+{% block title %} This is my page{% endblock %}
+{% block css %}
+.carousel-indicators li {
+background-color:blue;
+}
+.card-img-top {
+height: 250px;
+width: 270px;
+}
+.card{
+height: 400px;
+margin-bottom:20px;
+}
+.col-md-3{
+display: inline-block;
+margin-left: -5px;
+}
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+background-color: black;
+}
+.card-img-top {
+height:250px;
+}
+.carousel-control-prev,
+.carousel-control-next{
+width:50px;
+}
+{% endblock %}
+{% block body %}
+{% for nSlides,range,product in allprods %}
+<div class="container carousel-inner">
+    <h3>Sale on {{product.0.category}}</h3>
+    <ul class="carousel-indicators">
+        <li class="active" data-slide-to="0" data-target="#nash{{forloop.counter}}"></li>
+        {% for i in range %}
+        <li data-slide-to="{{i}}" data-target="#nash{{forloop.parentloop.counter}}"></li>
+        {% endfor %}
+    </ul>
+    <div id="nash{{forloop.counter}}" class="carousel slide" data-ride="carousel">
+        <div class="carousel-item active">
+            {% for i in product %}
+            <div class="col-md-3">
+                <div class="card align-items-center" style="width: 18rem;">
+                    <img src="/media/{{i.image}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{i.product_name}}</h5>
+                        <p class="card-text">{{i.desc|slice:":30"}}...</p>
+                        <span id="divpr{{i.id}}">
+                            <button id="pr{{i.id}}" class="btn btn-primary cart">Add to Cart</button>
+                        </span>
+                        <a href="/shop/product/{{i.id}}" id="qv{{i.id}}" class="btn btn-primary cart">Buy Now</a>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
+        </div>
+        <div class="carousel-item">
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <a href="#nash" class="carousel-control-next" data-slide="next" data-target="#nash{{forloop.counter}}">
+        <span class="carousel-control-next-icon"></span>
+    </a>
+    <a href="#nash" class="carousel-control-prev" data-slide="prev" data-target="#nash{{forloop.counter}}">
+        <span class="carousel-control-prev-icon"></span>
+    </a>
+</div>
+{% endfor %}
+{% endblock %}
+{% block js %}
+<script>
+console.log('working')
+
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'))
+    document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    updateCart(cart);
+}
+
+$('.cart').click(function() {
+
+    console.log('clicked');
+    var idstr = this.id.toString();
+    console.log(idstr);
+    if (cart[idstr] != undefined) {
+        cart[idstr] = cart[idstr] + 1;
+    } else {
+        cart[idstr] = 1;
+    }
+    console.log(cart);
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    document.getElementById('cart').innerHTML = Object.keys(cart).length;
+});
+$('#popcart').popover()
+document.getElementById('popcart').setAttribute('data-content', '<h5>Items in your shopping cart</h5>');
+
+localStorage.setItem('cart', JSON.stringify(cart));
+js = localStorage.getItem('cart');
+</script>
+{% endblock %}

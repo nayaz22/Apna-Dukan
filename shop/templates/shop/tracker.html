@@ -1,0 +1,116 @@
+{% extends 'shop/basic.html' %}
+{% block title%} My Awesome Cart Tracker{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="col my-4">
+        <h2>Enter your Order Id and Email address to track your order</h2>
+        <form method="post" action="#" id="trackerForm">{% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputname">Order Id</label>
+                    <input type="text" class="form-control" id="orderId" name="orderId" placeholder="Order Id">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                </div>
+                <button type="submit" class="btn btn-primary">Track Order</button>
+            </div>
+    </div>
+
+    <div class="col my-4">
+        
+            <h2>Your Order Status</h2>
+            <div class="my-4">
+                <ul class="list-group" id="items">
+                    
+                    <!-- Filling up uisng javascript -->
+                </ul>
+            </div>
+    </div>
+    <div class="col my-4">
+        <h2>Your Order List</h2>
+        <div class="my-4">
+            <ul class="list-group" id="fetch_items">
+                <!-- Filling up uisng javascript -->
+            </ul>
+        </div>
+        <div class="totalamount" id="total">
+            <!-- Total will update in JavaScript -->
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block js %}
+<script>
+$('#trackerForm').submit(function(event) {
+    $('#items').empty();
+    $('#fetch_items').empty();
+    $('#total').empty();
+    var formData = {
+        'orderId': $('input[name=orderId]').val(),
+        'email': $('input[name=email]').val(),
+        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/shop/tracker/',
+            data: formData,
+            encode: true
+        })
+        .done(function(data) {
+            data = JSON.parse(data);
+            console.log(data)
+            
+            
+            if (data['status'] == 'success') {
+                updates = data['updates'];
+                for (i = 0; i < updates.length; i++) {
+                    let text = updates[i]['text'];
+                    let time = updates[i]['time'];
+                    mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${text}
+                    <span class="badge badge-primary badge-pill">${time}</span>
+                </li>`
+
+                    $('#items').append(mystr);
+
+                // Filling Order Details:
+                cart = JSON.parse(data['itemsJson']);
+                console.log(cart)
+                tot = 0;
+                for (item in cart) {
+
+                    let qty = cart[item][0];
+                    let name = cart[item][1];
+                    let price = cart[item][2];
+                    tot = tot + price * cart[item][0];
+                    str = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${name}
+                    <span class="badge badge-primary badge-pill px-2 py-2">Rs: ${price}  Qty: ${qty}</span>
+                </li>`;
+                    $('#fetch_items').append(str);
+
+                }
+
+                document.getElementById('total').innerHTML = (`<h5>Total Amount Paid <b> Rs: ${tot}</b></h5>`)
+
+                }
+            } else {
+                str = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    Sorry, We are not able to fetch your Details! Make sure you entered the Correct Order-Id Email.
+                    <span class="badge badge-primary badge-pill px-2 py-2"></span>
+                </li>`;
+                    $('#items').append(str);
+                    $('#fetch_items').append(str);
+            }
+
+
+
+        });
+
+    event.preventDefault();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'shop/basic.html' %}
+{% block title %} {{product.product_name}} My Awesome Cart {% endblock %}
+
+{% block css %}
+
+#photo{
+border:2px solid black;
+height:300px;
+width:290px;
+}
+
+#para{
+    
+    font-size:23px;
+}
+
+{% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+    <div class="row py-3">
+    <div class="col-md-4">
+        <div class="row">
+            <img id="photo" src="/media/{{product.image}}">
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h3>{{product.product_name}}</h3>
+        <p><h5><b>$ {{product.price}}</b></h5></p>
+        <h5><b>About your Description:</b></h5>
+        <p id="para">{{product.desc}}</p>
+        
+    </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+console.log('product page working')
+var totitem=0;
+if (localStorage.getItem('cart') == null) {
+    cart = {}
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    for (var item in cart) {
+        totitem = totitem + cart[item][0];
+        
+    }
+
+
+}
+
+
+console.log(totitem)
+document.getElementById('cart').innerHTML=(totitem);
+
+
+</script>
+
+{% endblock %}

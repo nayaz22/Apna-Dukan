@@ -1,0 +1,58 @@
+{% extends 'shop/basic.html' %}
+{% block title %} My Awesome Cart {% endblock %}
+
+{% block css %}
+
+.theme:hover{
+color:yellow;
+}
+
+{% endblock %}
+
+
+
+{% block body %}
+
+
+
+
+    <main role="main">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <div class="container">
+          <h5 class="display-3">Welcome to Adnan Shopping Cart</h5>
+          <p> My Awesome Cart is a Singaporean[8] e-commerce company headquartered in Vaniyambadi, TamilNadu, India. The company initially focused on book sales, before expanding into other product categories such as consumer electronics, fashion, home essentials, groceries, and lifestyle products.
+
+The service competes primarily with Amazon's Indian subsidiary, and domestic rival, Snapdeal.[9][10] As of March 2017, My Awesome Cart held a 39.5% market share of India's e-commerce industry.[11] Flipkart has a dominant position in the apparel segment bolstered by its acquisition of Myntra and was described as being "neck and neck" with Amazon in the sale of electronics and mobile phones.[12] My Awesome Cart also owns PhonePe, a mobile payments service based on the Unified Payments Interface.
+In August 2020, U.S.-based retail chain Walmart acquired an 81% controlling stake in My Awesome Cart for US$16 billion, valuing the company at $20 billion.[13]</p>
+            <h4><b class="theme">-Adnan Munnu potta</b></h4>
+        </div>
+      </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+
+
+{% endblock %}
+
+{% block js%}
+<script>
+  
+cart = JSON.parse(localStorage.getItem('cart'));
+sum=0;
+for (item in cart){
+sum=sum+cart[item][0];
+document.getElementById('popcart').innerHTML=`Cart(${sum})`;
+}
+  
+</script>
+
+
+{% endblock %}
